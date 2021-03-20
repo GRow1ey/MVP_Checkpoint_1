@@ -46,7 +46,7 @@ for n in range(nstep):
             spin_new=-spin[itrial,jtrial]
 
 #compute delta E eg via function (account for periodic BC)
-
+            deltae = 5
 #perform metropolis test
             r = random.random()
             if r <= np.exp(-deltae/kT):

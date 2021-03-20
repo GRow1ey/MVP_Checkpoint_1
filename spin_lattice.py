@@ -57,7 +57,7 @@ class SpinLattice():
                 elif random_number >= 0.5:
                     spin_lattice[row, column] = 1
     
-    def calculate_new_state(self):
+    def select_new_state(self):
         """Calculate the new state."""
         number_rows = self.get_lattice_dimensions()
         number_columns = self.get_lattice_dimensions()
@@ -66,11 +66,8 @@ class SpinLattice():
         #select spin randomly
         self.itrial = np.random.randint(0, number_rows)
         self.jtrial = np.random.randint(0, number_columns)
-        new_spin = -spin_lattice[self.itrial, self.jtrial]
-                            
-        return new_spin
 
-    def find_nearest_neighbours(self, itrial, jtrial):
+    def find_nearest_neighbours(self):
         """Find the nearest neighbours of the current state."""
         number_rows = self.get_lattice_dimensions()
         number_columns = self.get_lattice_dimensions()
@@ -78,51 +75,59 @@ class SpinLattice():
         right = 0
         above = 0
         below = 0
-        if (itrial - 1) < 0:
-            left = ((number_columns - 1), jtrial)
+        if (self.itrial - 1) < 0:
+            left = ((number_columns - 1), self.jtrial)
         else:
-            left = ((itrial - 1), jtrial)
-        if (itrial + 1) > (number_columns - 1):
-            right = (((itrial + 1) % number_columns), jtrial)
+            left = ((self.itrial - 1), self.jtrial)
+        if (self.itrial + 1) >= (number_columns - 1):
+            right = (((self.itrial + 1) % number_columns), self.jtrial)
         else:
-            right = ((itrial + 1), jtrial)
-        if (jtrial - 1) < 0:
-            above = (itrial, (number_rows - 1))
+            right = ((self.itrial + 1), self.jtrial)
+        if (self.jtrial - 1) < 0:
+            above = (self.itrial, (number_rows - 1))
         else:
-            above = (itrial, (jtrial - 1))
-        if (jtrial + 1) > (number_rows - 1):
-            below = (itrial, ((jtrial + 1) % number_rows))
+            above = (self.itrial, (self.jtrial - 1))
+        if (self.jtrial + 1) >= (number_rows - 1):
+            below = (self.itrial, ((self.jtrial + 1) % number_rows))
         else:
-            below = (itrial, (jtrial + 1))
+            below = (self.itrial, (self.jtrial + 1))
         return [left, right, above, below]
 
-    def calculate_mean_total_energy(self, itrial, jtrial):
+    def calculate_mean_total_energy(self):
         """"""
         J = self.get_J()
-        nearest_neighbours_indices = self.find_nearest_neighbours(itrial, jtrial)
+        nearest_neighbours_indices = self.find_nearest_neighbours()
         spin_lattice = self.get_spin_lattice()
         sum_over_nearest_neighbours = 0
         for nearest_neighbour_index in nearest_neighbours_indices:
-            sum_over_nearest_neighbours += spin_lattice[itrial, jtrial] * \
+            sum_over_nearest_neighbours += spin_lattice[self.itrial, self.jtrial] * \
                                     spin_lattice[nearest_neighbour_index[0], 
                                                 nearest_neighbour_index[1]]
 
-        return -J * sum_over_nearest_neighbours
+        return sum_over_nearest_neighbours
 
-    def calculate_energy_difference(self, itrial, jtrial):
+    def calculate_energy_difference(self):
         """"""
-        return self.calculate_mean_total_energy(itrial, jtrial) - \
-            self.calculate_mean_total_energy(itrial, jtrial)
+        nearest_neighbours_indices = self.find_nearest_neighbours()
+        sum_over_nearest_neighbours = 0
+        spin_lattice = self.get_spin_lattice()
+        J = self.get_J()
+        for neighbour in nearest_neighbours_indices:
+            sum_over_nearest_neighbours += spin_lattice[neighbour[0], 
+                                        neighbour[1]]
+        delta_E = 2 * J * spin_lattice[self.itrial, self.jtrial] * \
+                sum_over_nearest_neighbours
+        return delta_E
 
-    def metropolis_algorithm(self, new_spin, energy_difference):
+    def metropolis_algorithm(self, energy_difference):
         """"""
         random_number = random.random()
         spin_lattice = self.get_spin_lattice()
         boltzmann_weight = self.calculate_boltzmann_weight(energy_difference)
         if energy_difference <= 0:
-            self.spin_lattice[self.itrial, self.jtrial] = new_spin
+            spin_lattice[self.itrial, self.jtrial] *= -1
         elif random_number <= boltzmann_weight:
-            spin_lattice[self.itrial, self.jtrial] = new_spin
+            spin_lattice[self.itrial, self.jtrial] *= -1
 
     def calculate_boltzmann_weight(self, energy_difference):
         """"""

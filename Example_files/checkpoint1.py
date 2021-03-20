@@ -120,7 +120,8 @@ class Spins(object):
                 for j in range(self.sizey):
                     self.glaubermarkov()
                     self.metropolis()
-            if n%10==0:                    
+            if n%10==0:             
+                print(n, self.energydiffernce())       
                 f=open('spins.dat','w')
                 for i in range(self.sizex):
                     for j in range(self.sizey):
