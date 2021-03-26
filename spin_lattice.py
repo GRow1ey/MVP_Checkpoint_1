@@ -9,12 +9,11 @@ import matplotlib.animation as animation
 class SpinLattice():
     """A class to represent the lattice of spins in the Ising model."""
 
-    def __init__(self, lattice_dimensions, temperature, dynamics_type):
+    def __init__(self, lattice_dimensions, temperature):
         self.lattice_dimensions = lattice_dimensions
         self.spin_lattice = np.zeros((lattice_dimensions, lattice_dimensions), 
                                     dtype=float)
         self.temperature = temperature
-        self.dynamics_type = dynamics_type
         self.J = 1.0
         self.nsteps = 10000
         self.itrial = 0
@@ -34,9 +33,6 @@ class SpinLattice():
         """Method to return the temperature of the system."""
         return self.temperature
 
-    def get_dynamics_type(self):
-        """Method to return the type of dynamics used in the simulation."""
-        return self.dynamics_type
     def get_J(self):
         """Method to return J."""
         return self.J
@@ -78,7 +74,10 @@ class SpinLattice():
     def calculate_mean_total_energy(self):
         """"""
         J = self.get_J()
-        nearest_neighbours_indices = self.find_nearest_neighbours()
+        itrial = self.get_itrial()
+        jtrial = self.get_jtrial()
+        nearest_neighbours_indices = \
+            self.find_nearest_neighbours(itrial, jtrial)
         spin_lattice = self.get_spin_lattice()
         sum_over_nearest_neighbours = 0
         for nearest_neighbour_index in nearest_neighbours_indices:
@@ -113,19 +112,6 @@ class SpinLattice():
         else:
             below = (itrial, (jtrial + 1))
         return [left, right, above, below]
-
-    def calculate_mean_total_energy(self):
-        """"""
-        J = self.get_J()
-        nearest_neighbours_indices = self.find_nearest_neighbours()
-        spin_lattice = self.get_spin_lattice()
-        sum_over_nearest_neighbours = 0
-        for nearest_neighbour_index in nearest_neighbours_indices:
-            sum_over_nearest_neighbours += spin_lattice[self.itrial, self.jtrial] * \
-                                    spin_lattice[nearest_neighbour_index[0], 
-                                                nearest_neighbour_index[1]]
-
-        return sum_over_nearest_neighbours
 
     def calculate_average_energy(self):
         """"""
@@ -195,6 +181,50 @@ class SpinLattice():
         elif random_number <= boltzmann_weight:
             spin_lattice[self.itrial, self.jtrial] *= -1
 
+    def calculate_observables_glauber(self):
+        """"""
+        nsteps = self.get_nsteps()
+        number_rows = self.get_lattice_dimensions()
+        number_columns = self.get_lattice_dimensions()
+        self.initialise_spin_lattice()
+
+        total_magnetisation = 0
+        absolute_magnetisation = 0
+        total_magnetisation_squared = 0
+        total_energy = 0
+        total_energy_squared = 0
+        bootstrap_energies = []
+
+        for step in range(nsteps):
+            for i in range(number_columns):
+                for j in range(number_rows):
+                    self.select_new_state_glauber()
+                    delta_E = self.calculate_energy_difference_glauber()
+                    self.metropolis_algorithm_glauber(delta_E)
+
+            if (step % 10 == 0) and (step > 100):
+                current_magnetisation = self.calculate_magnetisation()
+                current_energy = self.calculate_mean_total_energy()
+
+                # Sum over magnetisation values
+                total_magnetisation += current_magnetisation
+                total_magnetisation_squared += current_magnetisation ** 2
+                absolute_magnetisation += abs(current_magnetisation)
+
+                # Sum over energy values
+                total_energy += current_energy
+                total_energy_squared += current_energy ** 2
+
+                # Append current energy to boostrap energies list
+                bootstrap_energies.append(current_energy)
+
+        return total_magnetisation, total_magnetisation_squared, \
+                absolute_magnetisation, total_energy, \
+                total_energy_squared, bootstrap_energies
+
+    def bootstrap(energies,size,temp):
+        """"""
+
     # Kawasaki Methods
 
     def select_new_state_kawasaki(self):
@@ -257,3 +287,7 @@ class SpinLattice():
             elif random_number <= boltzmann_weight:
                 spin_lattice[self.itrial, self.jtrial] *= -1
                 spin_lattice[self.itrial_1, self.jtrial_1] *= -1
+
+    def calculate_observables_kawasaki(self):
+        """"""
+        pass
