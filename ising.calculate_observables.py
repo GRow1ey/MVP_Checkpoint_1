@@ -11,7 +11,7 @@ import matplotlib.animation as animation
     
 def main():
     if len(sys.argv) != 3:
-        print("Usage python3 ising.animation.py N Glauber/Kawasaki")
+        print("Usage python3 ising.calculate_observables.py N Glauber/Kawasaki")
         sys.exit()
 
     lattice_dimensions = int(sys.argv[1])
