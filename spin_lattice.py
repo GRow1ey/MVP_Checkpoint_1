@@ -184,8 +184,7 @@ class SpinLattice():
     def calculate_observables_glauber(self):
         """"""
         nsteps = self.get_nsteps()
-        number_rows = self.get_lattice_dimensions()
-        number_columns = self.get_lattice_dimensions()
+        lattice_dimensions = self.get_lattice_dimensions()
         self.initialise_spin_lattice()
 
         total_magnetisation = 0
@@ -196,8 +195,8 @@ class SpinLattice():
         bootstrap_energies = []
 
         for step in range(nsteps):
-            for i in range(number_columns):
-                for j in range(number_rows):
+            for i in range(lattice_dimensions):
+                for j in range(lattice_dimensions):
                     self.select_new_state_glauber()
                     delta_E = self.calculate_energy_difference_glauber()
                     self.metropolis_algorithm_glauber(delta_E)
@@ -222,8 +221,33 @@ class SpinLattice():
                 absolute_magnetisation, total_energy, \
                 total_energy_squared, bootstrap_energies
 
-    def bootstrap(energies,size,temp):
-        """"""
+    def bootstrap(self, energies, temperature):
+        """
+        Calculate the resampled scaled heat capacity using bootstrap
+        method.
+        """
+        lattice_dimensions = self.get_lattice_dimensions()
+        resampled_energies = []
+        length_energies = len(energies)
+        for i in range(length_energies):
+            random_number = random.random()
+            energy_index = int(random_number * length_energies) - 1
+
+            resampled_energies.append(energies[energy_index])
+            
+        mean_sum_squared_resampled_energies = \
+            (sum([resampled_energy ** 2 for resampled_energy in \
+                resampled_energies])) / 1000
+        mean_sum_resampled_energies = sum(resampled_energies) / 1000
+
+        # Calculate the resampled scaled heat capacity
+        resampled_scaled_heat_capacity = \
+            (1 / (lattice_dimensions * temperature)) * \
+            (mean_sum_squared_resampled_energies - \
+                mean_sum_resampled_energies ** 2)
+
+        return resampled_scaled_heat_capacity
+
 
     # Kawasaki Methods
 
@@ -290,4 +314,30 @@ class SpinLattice():
 
     def calculate_observables_kawasaki(self):
         """"""
-        pass
+        nsteps = self.get_nsteps()
+        lattice_dimensions = self.get_lattice_dimensions()
+        self.initialise_spin_lattice()
+
+        total_energy = 0
+        total_energy_squared = 0
+        bootstrap_energies = []
+
+        for step in range(nsteps):
+            for i in range(lattice_dimensions):
+                for j in range(lattice_dimensions):
+                    self.select_new_state_kawasaki()
+                    delta_E = self.calculate_energy_difference_kawasaki()
+                    self.metropolis_algorithm_kawasaki(delta_E)
+
+            if (step % 10 == 0) and (step > 100):
+                current_energy = self.calculate_mean_total_energy()
+
+                # Sum over energy values
+                total_energy += current_energy
+                total_energy_squared += current_energy ** 2
+
+                # Append current energy to boostrap energies list
+                bootstrap_energies.append(current_energy)
+
+        return total_energy, total_energy_squared, bootstrap_energies
+        
