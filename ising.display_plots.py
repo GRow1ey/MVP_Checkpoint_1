@@ -8,82 +8,141 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+matplotlib.rcParams['text.usetex'] = True
 
-# plot glauber energy
-def glauben():
-    datafile = np.loadtxt("glauberdata1.txt")
+def display_mean_energy_plot_glauber():
+    """Plot the average energy against temperature for Glauber Dynamics."""
+    datafile = np.loadtxt("ising_model_glauber_data.txt")
     temperatures = datafile[0]
-    yax = datafile[3]
-    plt.title('Average Energy against Temperature using Glauber Dynamics')
+    mean_energies = datafile[3]
+    plt.title('Mean Energy against Temperature for Glauber Dynamics')
     plt.xlabel('Temperature, T')
-    plt.ylabel('Average Energy, <E>')
-    plt.plot(temperatures,yax)
+    plt.ylabel('Mean Energy, $\displaystyle\langle E \\rangle$')
+    plt.plot(temperatures, mean_energies)
     plt.show()
     main()
 
-# plot glauber absolute magnetism
-def glaubmag():
-    datafile = np.loadtxt("glauberdata1.txt")
+def display_mean_absolute_magnetism_plot_glauber():
+    """
+    Plot the mean absolute magnetisation against 
+    temperature for Glauber Dynamics.
+    """
+    datafile = np.loadtxt("ising_model_glauber_data.txt")
     temperatures = datafile[0]
-    yax = datafile[1]
-    plt.title('Average Absolute Magnetisation against Temperature using Glauber Dynamics')
+    mean_absolute_magnetisms = datafile[1]
+    plt.title('Mean Absolute Magnetisation against Temperature for\
+         Glauber Dynamics')
     plt.xlabel('Temperature, T')
-    plt.ylabel('Average Absolute Magnetisation, <|M|>')
-    plt.plot(temperatures,yax)
+    plt.ylabel('Mean Absolute Magnetisation, $\displaystyle\langle |M| \\rangle$')
+    plt.plot(temperatures, mean_absolute_magnetisms)
     plt.show()
     main()
 
-#plot glauber specific heat
-def glaubsh():
-    datafile = np.loadtxt("glauberdata1.txt")
+def display_scaled_specific_heat_plot_glauber():
+    """
+    Plot the scaled specific heat against 
+    temperature for Glauber.
+    """
+    datafile = np.loadtxt("ising_model_glauber_data.txt")
     temperatures = datafile[0]
-    yax = datafile[4]
-    bootstraperror = datafile[5]
-    plt.title('Specific Heat Capacity against Temperature using Glauber Dynamics')
+    scaled_specific_heat_capacities = datafile[4]
+    bootstrap_errors = datafile[5]
+    plt.title('Scaled Specific Heat Capacity against Temperature using \
+        Glauber Dynamics')
     plt.xlabel('Temperature, T')
-    plt.ylabel('Specific Heat Capacity, C')
-    plt.plot(temperatures,yax)
-    plt.errorbar(temperatures, yax, yerr=bootstraperror)
+    plt.ylabel('Scaled Specific Heat Capacity, C')
+    plt.plot(temperatures, scaled_specific_heat_capacities)
+    plt.errorbar(temperatures, scaled_specific_heat_capacities, yerr=bootstrap_errors)
     plt.show() 
     main()
 
-
-# plot glauber susceptibility
-def glaubsus():
-    datafile = np.loadtxt("glauberdata1.txt")
+def display_susceptibility_plot_glauber():
+    """
+    Plot the susceptibility against temperature 
+    for Glauber Dynamics.
+    """
+    datafile = np.loadtxt("ising_model_glauber_data.txt")
     temperatures = datafile[0]
-    yax = datafile[2]
+    susceptibilities = datafile[2]
     plt.title('Susceptibility against Temperature using Glauber Dynamics')
     plt.xlabel('Temperature, T')
-    plt.ylabel('Susceptibility, χ')
-    plt.plot(temperatures,yax)
+    plt.ylabel('Susceptibility, $\displaystyle \chi$')
+    plt.plot(temperatures, susceptibilities)
     plt.show()
     main()
 
-# plot kawasaki energy
-def kawaen():
-    datafile = np.loadtxt("kawadata.txt")
+def display_mean_energy_plot_kawasaki():
+    """
+    Plot the mean energy against temperature for Kawasaki Dynamics.
+    """
+    datafile = np.loadtxt("ising_model_kawasaki_data.txt")
     temperatures = datafile[0]
-    yax = datafile[1]
-    plt.title('Average Energy against Temperature using Kawasaki Dynamics')
+    mean_energies = datafile[1]
+    plt.title('Mean Energy against Temperature using Kawasaki Dynamics')
     plt.xlabel('Temperature, T')
-    plt.ylabel('Average Energy, <E>')
-    plt.plot(temperatures,yax)
+    plt.ylabel('Average Energy, $\displaystyle\langle E \\rangle$')
+    plt.plot(temperatures, mean_energies)
     plt.show()
     main()
 
-# plot kawasaki specific heat
-def kawash():
-    datafile = np.loadtxt("kawadata.txt")
+def display_scaled_specific_heat_plot_kawasaki():
+    """
+    Plot the scaled specific heat capacity against temperature
+    for Kawasaki Dynamics.
+    """
+    datafile = np.loadtxt("ising_model_kawasaki_data.txt")
     temperatures = datafile[0]
-    yax = datafile[2]
-    bootstraperror = datafile[3]
+    scaled_specific_heat_capacities = datafile[2]
+    bootstrap_errors = datafile[3]
     plt.title('Specific Heat Capacity against Temperature using Kawasaki Dynamics')
     plt.xlabel('Temperature, T')
     plt.ylabel('Specific Heat Capacity, C')
-    plt.plot(temperatures,yax)
-    plt.errorbar(temperatures, yax, yerr=bootstraperror)
+    plt.plot(temperatures, scaled_specific_heat_capacities)
+    plt.errorbar(temperatures, scaled_specific_heat_capacities, 
+        yerr=bootstrap_errors)
     plt.show()
     main()
 
 def main():
+    if len(sys.argv) != 2:
+        print("Usage python3 ising.display_plots.py Glauber/Kawasaki")
+        sys.exit()
+
+    dynamics_type = sys.argv[1]
+    simulation_running = True
+    while simulation_running:
+        if dynamics_type == "Glauber":
+            prompt = "Enter the observable plot you wish to display: \n"
+            prompt += "(Energy/Absolute Magnetisation/" + \
+                "Scaled Specific Heat/Susceptibility) \n"
+            prompt += "(Enter 'q' to quit) "
+            observable = input(prompt)
+            if observable == "Energy":
+                display_mean_energy_plot_glauber()
+                main()
+            elif observable == "Absolute Magnetisation":
+                display_mean_absolute_magnetism_plot_glauber()
+                main()
+            elif observable == "Scaled Specific Heat":
+                display_scaled_specific_heat_plot_glauber()
+                main()
+            elif observable == "Susceptibility":
+                display_susceptibility_plot_glauber()
+                main()
+            elif observable == 'q':
+                simulation_running = False
+        elif dynamics_type == "Kawasaki":
+            prompt = "Enter the observable plot you wish to display: \n"
+            prompt += "(Energy/Scaled Specific Heat) \n"
+            prompt += "(Enter 'q' to quit) "
+            observable = input(prompt)
+            if observable == "Energy":
+                display_mean_energy_plot_kawasaki()
+                main()
+            elif observable == "Scaled Specific Heat":
+                display_scaled_specific_heat_plot_kawasaki()
+                main()
+            elif observable == 'q':
+                simulation_running = False
+
+main()

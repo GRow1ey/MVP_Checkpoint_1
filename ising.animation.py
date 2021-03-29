@@ -37,7 +37,7 @@ def main():
                 print(step, delta_E)
         #       dump output
                 spin_lattice = ising_model.get_spin_lattice()
-                f = open('spins.dat','w')
+                f = open('spins_glauber.dat','w')
                 for i in range(lattice_dimensions):
                     for j in range(lattice_dimensions):
                         f.write('%d %d %d\n' % (i, j, spin_lattice[i, j]))
@@ -60,7 +60,7 @@ def main():
                 print(step, delta_E)
         #       dump output
                 spin_lattice = ising_model.get_spin_lattice()
-                f = open('spins.dat','w')
+                f = open('spins_kawasaki.dat','w')
                 for i in range(lattice_dimensions):
                     for j in range(lattice_dimensions):
                         f.write('%d %d %d\n' % (i, j, spin_lattice[i, j]))
