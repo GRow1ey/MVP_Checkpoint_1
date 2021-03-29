@@ -70,7 +70,7 @@ class SpinLattice():
                     spin_lattice[row, column] = -1
                 elif random_number >= 0.5:
                     spin_lattice[row, column] = 1
-
+    """
     def calculate_mean_total_energy(self):
         """"""
         J = self.get_J()
@@ -85,8 +85,8 @@ class SpinLattice():
                                     spin_lattice[nearest_neighbour_index[0], 
                                                 nearest_neighbour_index[1]]
 
-        return sum_over_nearest_neighbours
-
+        return 0.5 * sum_over_nearest_neighbours
+    """
     def find_nearest_neighbours(self, itrial, jtrial):
         """Find the nearest neighbours of the current state."""
         number_rows = self.get_lattice_dimensions()
@@ -113,7 +113,7 @@ class SpinLattice():
             below = (itrial, (jtrial + 1))
         return [left, right, above, below]
 
-    def calculate_average_energy(self):
+    def calculate_mean_total_energy(self):
         """"""
         number_rows = self.get_lattice_dimensions()
         number_columns = self.get_lattice_dimensions()
@@ -129,6 +129,8 @@ class SpinLattice():
                                         neighbour[1]]
                 energy_neighbours += (-1) * spin_lattice[column, row] * \
                                 sum_over_nearest_neighbours
+
+        return 0.5 * energy_neighbours
 
     def calculate_boltzmann_weight(self, energy_difference):
         """"""
