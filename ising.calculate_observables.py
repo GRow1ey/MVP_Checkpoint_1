@@ -44,13 +44,14 @@ def main():
             mean_squared_total_energy = total_energy_squared / 1000
             
             # Calculate the susceptibility
-            susceptibility = (1 / (lattice_dimensions * temperature)) * \
-                (mean_squared_total_magnetisation - \
-                    mean_total_magnetisation ** 2)
+            susceptibility = (1 / ((lattice_dimensions ** 2) * temperature)) \
+                * (mean_squared_total_magnetisation - \
+                    (mean_total_magnetisation ** 2))
 
             # Calculate the scaled heat capacity (or heat capacity per spin)
-            scaled_heat_capacity = (1 / (lattice_dimensions * temperature)) * \
-                (mean_squared_total_energy - mean_total_energy ** 2)
+            scaled_heat_capacity = (1 / ((lattice_dimensions ** 2) * \
+                temperature)) * (mean_squared_total_energy - \
+                    mean_total_energy ** 2)
 
             # Append the calculated values to their corresponding lists
             absolute_magnetisms.append(mean_absolute_magnetisation)

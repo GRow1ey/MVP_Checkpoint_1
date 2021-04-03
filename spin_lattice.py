@@ -237,16 +237,16 @@ class SpinLattice():
 
             resampled_energies.append(energies[energy_index])
             
-        mean_sum_squared_resampled_energies = \
+        mean_sum_squared_resampled_energy = \
             (sum([resampled_energy ** 2 for resampled_energy in \
                 resampled_energies])) / 1000
-        mean_sum_resampled_energies = sum(resampled_energies) / 1000
+        mean_sum_resampled_energy = sum(resampled_energies) / 1000
 
         # Calculate the resampled scaled heat capacity
         resampled_scaled_heat_capacity = \
-            (1 / (lattice_dimensions * temperature)) * \
-            (mean_sum_squared_resampled_energies - \
-                mean_sum_resampled_energies ** 2)
+            (1 / ((lattice_dimensions ** 2) * temperature)) * \
+            (mean_sum_squared_resampled_energy - \
+                mean_sum_resampled_energy ** 2)
 
         return resampled_scaled_heat_capacity
 
