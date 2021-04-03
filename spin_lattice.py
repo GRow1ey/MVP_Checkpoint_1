@@ -203,7 +203,7 @@ class SpinLattice():
                     delta_E = self.calculate_energy_difference_glauber()
                     self.metropolis_algorithm_glauber(delta_E)
 
-            if (step % 10 == 0) and (step > 100):
+            if (step % 10 == 0) and (step > 300):
                 current_magnetisation = self.calculate_magnetisation()
                 current_energy = self.calculate_mean_total_energy()
 
@@ -331,7 +331,7 @@ class SpinLattice():
                     delta_E = self.calculate_energy_difference_kawasaki()
                     self.metropolis_algorithm_kawasaki(delta_E)
 
-            if (step % 10 == 0) and (step > 100):
+            if (step % 10 == 0) and (step > 300):
                 current_energy = self.calculate_mean_total_energy()
 
                 # Sum over energy values
