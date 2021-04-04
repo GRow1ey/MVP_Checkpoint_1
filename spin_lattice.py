@@ -281,10 +281,10 @@ class SpinLattice():
                     sum_over_nearest_neighbours_state_1 += \
                             spin_lattice[nearest_neighbours_indices_state_1[i][0],
                                         nearest_neighbours_indices_state_1[i][1]]
-            delta_E = 2 * J * (spin_lattice[itrial, jtrial] * \
+            delta_E = 2 * J * ((spin_lattice[itrial, jtrial] * \
                 sum_over_nearest_neighbours_state_0) + \
                     (spin_lattice[itrial_1, jtrial_1] * \
-                        sum_over_nearest_neighbours_state_1)
+                        sum_over_nearest_neighbours_state_1))
             return delta_E
 
     def metropolis_algorithm_kawasaki(self, energy_difference):
