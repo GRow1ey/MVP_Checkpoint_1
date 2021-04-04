@@ -123,29 +123,42 @@ class SpinLattice():
 
     def calculate_magnetisation(self):
         """"""
-        number_rows = self.get_lattice_dimensions()
-        number_columns = self.get_lattice_dimensions()
+        lattice_dimensions = self.get_lattice_dimensions()
         spin_lattice = self.get_spin_lattice()
         sum_over_spins = 0
-        for row in range(number_rows):
-            for column in range(number_columns):
+        for row in range(lattice_dimensions):
+            for column in range(lattice_dimensions):
                 sum_over_spins += spin_lattice[row, column]
         return sum_over_spins
         
     # Glauber Methods
+    def initialise_spin_lattice_glauber(self):
+        """
+        Initialise the spin lattice for Glauber dynamics
+        to allow accurate calculation of observables.
+        All spins are initialised as being up (1).
+        This is not used for animating the Ising model.
+        """
+        lattice_dimensions = self.get_lattice_dimensions()
+        spin_lattice = self.get_spin_lattice()
+
+        for row in range(lattice_dimensions):
+            for column in range(lattice_dimensions):
+                spin_lattice[row, column] = 1
 
     def select_new_state_glauber(self):
         """Calculate the new state."""
-        number_rows = self.get_lattice_dimensions()
-        number_columns = self.get_lattice_dimensions()
-        spin_lattice = self.get_spin_lattice()
+        lattice_dimensions = self.get_lattice_dimensions()
         
         #select spin randomly
-        self.itrial = np.random.randint(0, number_rows)
-        self.jtrial = np.random.randint(0, number_columns)
+        self.itrial = np.random.randint(0, lattice_dimensions)
+        self.jtrial = np.random.randint(0, lattice_dimensions)
 
     def calculate_energy_difference_glauber(self):
-        """"""
+        """
+        Calculate the energy difference between the original state
+        and the generated trial state.
+        """
         nearest_neighbours_indices = self.find_nearest_neighbours(self.itrial, self.jtrial)
         sum_over_nearest_neighbours = 0
         spin_lattice = self.get_spin_lattice()
@@ -158,7 +171,13 @@ class SpinLattice():
         return delta_E
 
     def metropolis_algorithm_glauber(self, energy_difference):
-        """"""
+        """
+        Determine if the new trial state should be accepted, by
+        comparing the energy difference.
+        The new state is accepted if the energy difference is less
+        than or equal to zero or less than or equal to the Boltzmann
+        probability distribution.
+        """
         random_number = random.random()
         spin_lattice = self.get_spin_lattice()
         boltzmann_weight = self.calculate_boltzmann_weight(energy_difference)
@@ -168,10 +187,12 @@ class SpinLattice():
             spin_lattice[self.itrial, self.jtrial] *= -1
 
     def calculate_observables_glauber(self):
-        """"""
+        """
+        Calculate the observables using Glauber dynamics.
+        """
         nsteps = self.get_nsteps()
         lattice_dimensions = self.get_lattice_dimensions()
-        self.initialise_spin_lattice()
+        self.initialise_spin_lattice_glauber()
 
         total_magnetisation = 0
         absolute_magnetisation = 0
@@ -238,26 +259,27 @@ class SpinLattice():
     # Kawasaki Methods
 
     def select_new_state_kawasaki(self):
-            """Select the new state."""
-            number_rows = self.get_lattice_dimensions()
-            number_columns = self.get_lattice_dimensions()
-            spin_lattice = self.get_spin_lattice()
+            """Calculate the new state."""
+            lattice_dimensions = self.get_lattice_dimensions()
             
             # Select two trial spins randomly
-            self.itrial = np.random.randint(0, number_rows)
-            self.jtrial = np.random.randint(0, number_columns)
-            self.itrial_1 = np.random.randint(0, number_rows)
-            self.jtrial_1 = np.random.randint(0, number_columns)
+            self.itrial = np.random.randint(0, lattice_dimensions)
+            self.jtrial = np.random.randint(0, lattice_dimensions)
+            self.itrial_1 = np.random.randint(0, lattice_dimensions)
+            self.jtrial_1 = np.random.randint(0, lattice_dimensions)
 
             while self.spin_lattice[self.itrial, self.jtrial] == \
                 self.spin_lattice[self.itrial_1, self.jtrial_1]:
-                self.itrial = np.random.randint(0, number_rows)
-                self.jtrial = np.random.randint(0, number_columns)
-                self.itrial_1 = np.random.randint(0, number_rows)
-                self.jtrial_1 = np.random.randint(0, number_columns)
+                self.itrial = np.random.randint(0, lattice_dimensions)
+                self.jtrial = np.random.randint(0, lattice_dimensions)
+                self.itrial_1 = np.random.randint(0, lattice_dimensions)
+                self.jtrial_1 = np.random.randint(0, lattice_dimensions)
 
     def calculate_energy_difference_kawasaki(self):
-            """"""
+            """
+            Calculate the energy difference between the original state
+            and the generated trial state.
+            """
             itrial = self.get_itrial()
             jtrial = self.get_jtrial()
             itrial_1 = self.get_itrial_1()
@@ -288,19 +310,27 @@ class SpinLattice():
             return delta_E
 
     def metropolis_algorithm_kawasaki(self, energy_difference):
-            """"""
-            random_number = random.random()
-            spin_lattice = self.get_spin_lattice()
-            boltzmann_weight = self.calculate_boltzmann_weight(energy_difference)
-            if energy_difference <= 0:
-                spin_lattice[self.itrial, self.jtrial] *= -1
-                spin_lattice[self.itrial_1, self.jtrial_1] *= -1
-            elif random_number <= boltzmann_weight:
-                spin_lattice[self.itrial, self.jtrial] *= -1
-                spin_lattice[self.itrial_1, self.jtrial_1] *= -1
+        """
+        Determine if the new trial state should be accepted, by
+        comparing the energy difference.
+        The new state is accepted if the energy difference is less
+        than or equal to zero or less than or equal to the Boltzmann
+        probability distribution.
+        """
+        random_number = random.random()
+        spin_lattice = self.get_spin_lattice()
+        boltzmann_weight = self.calculate_boltzmann_weight(energy_difference)
+        if energy_difference <= 0:
+            spin_lattice[self.itrial, self.jtrial] *= -1
+            spin_lattice[self.itrial_1, self.jtrial_1] *= -1
+        elif random_number <= boltzmann_weight:
+            spin_lattice[self.itrial, self.jtrial] *= -1
+            spin_lattice[self.itrial_1, self.jtrial_1] *= -1
 
     def calculate_observables_kawasaki(self):
-        """"""
+        """
+        Calculate the observables using Kawasaki dynamics.
+        """
         nsteps = self.get_nsteps()
         lattice_dimensions = self.get_lattice_dimensions()
         self.initialise_spin_lattice()

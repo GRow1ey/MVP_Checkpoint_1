@@ -92,8 +92,8 @@ def display_scaled_specific_heat_plot_kawasaki():
     """
     datafile = np.loadtxt("ising_model_kawasaki_data.txt")
     temperatures = datafile[0]
-    scaled_specific_heat_capacities = datafile[2]
-    bootstrap_errors = datafile[3]
+    scaled_specific_heat_capacities = datafile[4]
+    bootstrap_errors = datafile[5]
     plt.title('Specific Heat Capacity against Temperature using Kawasaki Dynamics')
     plt.xlabel('Temperature, T')
     plt.ylabel('Specific Heat Capacity, C')
@@ -109,40 +109,39 @@ def main():
         sys.exit()
 
     dynamics_type = sys.argv[1]
-    simulation_running = True
-    while simulation_running:
+    while True:
         if dynamics_type == "Glauber":
             prompt = "Enter the observable plot you wish to display: \n"
-            prompt += "(Energy/Absolute Magnetisation/" + \
-                "Scaled Specific Heat/Susceptibility) \n"
+            prompt += "E-(Energy)/AM-(Absolute Magnetisation)/" + \
+                "SSH-(Scaled Specific Heat)/S-(Susceptibility)) \n"
             prompt += "(Enter 'q' to quit) "
             observable = input(prompt)
-            if observable == "Energy":
+            if observable == "E":
                 display_mean_energy_plot_glauber()
                 main()
-            elif observable == "Absolute Magnetisation":
+            elif observable == "AM":
                 display_mean_absolute_magnetism_plot_glauber()
                 main()
-            elif observable == "Scaled Specific Heat":
+            elif observable == "SSH":
                 display_scaled_specific_heat_plot_glauber()
                 main()
-            elif observable == "Susceptibility":
+            elif observable == "S":
                 display_susceptibility_plot_glauber()
                 main()
             elif observable == 'q':
-                simulation_running = False
+                break
         elif dynamics_type == "Kawasaki":
             prompt = "Enter the observable plot you wish to display: \n"
-            prompt += "(Energy/Scaled Specific Heat) \n"
+            prompt += "(E-(Energy)/SSH-(Scaled Specific Heat)) \n"
             prompt += "(Enter 'q' to quit) "
             observable = input(prompt)
-            if observable == "Energy":
+            if observable == "E":
                 display_mean_energy_plot_kawasaki()
                 main()
-            elif observable == "Scaled Specific Heat":
+            elif observable == "SSH":
                 display_scaled_specific_heat_plot_kawasaki()
                 main()
             elif observable == 'q':
-                simulation_running = False
+                break
 
 main()
