@@ -99,12 +99,11 @@ class SpinLattice():
 
     def calculate_mean_total_energy(self):
         """"""
-        number_rows = self.get_lattice_dimensions()
-        number_columns = self.get_lattice_dimensions()
+        lattice_dimensions = self.get_lattice_dimensions()
         spin_lattice = self.get_spin_lattice()
         energy_neighbours = 0
-        for column in range(number_columns):
-            for row in range(number_rows):
+        for column in range(lattice_dimensions):
+            for row in range(lattice_dimensions):
                 nearest_neighbours_indices = \
                     self.find_nearest_neighbours(column, row)
                 sum_over_nearest_neighbours = 0
