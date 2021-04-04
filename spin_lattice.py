@@ -70,23 +70,7 @@ class SpinLattice():
                     spin_lattice[row, column] = -1
                 elif random_number >= 0.5:
                     spin_lattice[row, column] = 1
-    """
-    def calculate_mean_total_energy(self):
-        """"""
-        J = self.get_J()
-        itrial = self.get_itrial()
-        jtrial = self.get_jtrial()
-        nearest_neighbours_indices = \
-            self.find_nearest_neighbours(itrial, jtrial)
-        spin_lattice = self.get_spin_lattice()
-        sum_over_nearest_neighbours = 0
-        for nearest_neighbour_index in nearest_neighbours_indices:
-            sum_over_nearest_neighbours += spin_lattice[self.itrial, self.jtrial] * \
-                                    spin_lattice[nearest_neighbour_index[0], 
-                                                nearest_neighbour_index[1]]
-
-        return 0.5 * sum_over_nearest_neighbours
-    """
+    
     def find_nearest_neighbours(self, itrial, jtrial):
         """Find the nearest neighbours of the current state."""
         number_rows = self.get_lattice_dimensions()
@@ -297,9 +281,10 @@ class SpinLattice():
                     sum_over_nearest_neighbours_state_1 += \
                             spin_lattice[nearest_neighbours_indices_state_1[i][0],
                                         nearest_neighbours_indices_state_1[i][1]]
-            delta_E = 2 * J * spin_lattice[itrial, jtrial] * \
-                    (sum_over_nearest_neighbours_state_0 + 
-                    sum_over_nearest_neighbours_state_1)
+            delta_E = 2 * J * (spin_lattice[itrial, jtrial] * \
+                sum_over_nearest_neighbours_state_0) + \
+                    (spin_lattice[itrial_1, jtrial_1] * \
+                        sum_over_nearest_neighbours_state_1)
             return delta_E
 
     def metropolis_algorithm_kawasaki(self, energy_difference):
