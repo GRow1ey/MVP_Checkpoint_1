@@ -92,8 +92,8 @@ def display_scaled_specific_heat_plot_kawasaki():
     """
     datafile = np.loadtxt("ising_model_kawasaki_data.txt")
     temperatures = datafile[0]
-    scaled_specific_heat_capacities = datafile[4]
-    bootstrap_errors = datafile[5]
+    scaled_specific_heat_capacities = datafile[2]
+    bootstrap_errors = datafile[3]
     plt.title('Specific Heat Capacity against Temperature using Kawasaki Dynamics')
     plt.xlabel('Temperature, T')
     plt.ylabel('Specific Heat Capacity, C')
