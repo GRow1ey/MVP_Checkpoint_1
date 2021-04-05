@@ -149,7 +149,7 @@ class SpinLattice():
         """Calculate the new state."""
         lattice_dimensions = self.get_lattice_dimensions()
         
-        #select spin randomly
+        # Select spin randomly
         self.itrial = np.random.randint(0, lattice_dimensions)
         self.jtrial = np.random.randint(0, lattice_dimensions)
 
@@ -230,7 +230,7 @@ class SpinLattice():
     def bootstrap(self, energies, temperature):
         """
         Calculate the resampled scaled heat capacity using bootstrap
-        method.
+        method to resample the energy values.
         """
         lattice_dimensions = self.get_lattice_dimensions()
         resampled_energies = []
