@@ -38,7 +38,7 @@ class SpinLattice():
         return self.J
 
     def get_nsteps(self):
-        """"""
+        """Method to return nsteps"""
         return self.nsteps
 
     def get_itrial(self):
@@ -59,12 +59,11 @@ class SpinLattice():
 
     def initialise_spin_lattice(self):
         """A method to initialise the lattice of spins."""
-        number_rows = self.get_lattice_dimensions()
-        number_columns = self.get_lattice_dimensions()
+        lattice_dimensions = self.get_lattice_dimensions()
         spin_lattice = self.get_spin_lattice()
 
-        for row in range(number_rows):
-            for column in range(number_columns):
+        for row in range(lattice_dimensions):
+            for column in range(lattice_dimensions):
                 random_number = random.random()
                 if random_number < 0.5:
                     spin_lattice[row, column] = -1
@@ -73,32 +72,34 @@ class SpinLattice():
     
     def find_nearest_neighbours(self, itrial, jtrial):
         """Find the nearest neighbours of the current state."""
-        number_rows = self.get_lattice_dimensions()
-        number_columns = self.get_lattice_dimensions()
+        lattice_dimensions = self.get_lattice_dimensions()
         left = 0
         right = 0
         above = 0
         below = 0
         if (itrial - 1) < 0:
-            left = ((number_columns - 1), jtrial)
+            left = ((lattice_dimensions - 1), jtrial)
         else:
             left = ((itrial - 1), jtrial)
-        if (itrial + 1) >= (number_columns - 1):
-            right = (((itrial + 1) % number_columns), jtrial)
+        if (itrial + 1) >= (lattice_dimensions - 1):
+            right = (((itrial + 1) % lattice_dimensions), jtrial)
         else:
             right = ((itrial + 1), jtrial)
         if (jtrial - 1) < 0:
-            above = (itrial, (number_rows - 1))
+            above = (itrial, (lattice_dimensions - 1))
         else:
             above = (itrial, (jtrial - 1))
-        if (jtrial + 1) >= (number_rows - 1):
-            below = (itrial, ((jtrial + 1) % number_rows))
+        if (jtrial + 1) >= (lattice_dimensions - 1):
+            below = (itrial, ((jtrial + 1) % lattice_dimensions))
         else:
             below = (itrial, (jtrial + 1))
         return [left, right, above, below]
 
     def calculate_mean_total_energy(self):
-        """"""
+        """
+        Calculate the mean total energy of the lattice of spins 
+        representing the Ising model.
+        """
         lattice_dimensions = self.get_lattice_dimensions()
         spin_lattice = self.get_spin_lattice()
         energy_neighbours = 0
@@ -116,12 +117,15 @@ class SpinLattice():
         return 0.5 * energy_neighbours
 
     def calculate_boltzmann_weight(self, energy_difference):
-        """"""
+        """Calculate the Boltzman weight."""
         temperature = self.get_temperature()
         return np.exp(-energy_difference / temperature)
 
     def calculate_magnetisation(self):
-        """"""
+        """
+        Calculate the magnetisation of the spin lattice representing the
+        Ising model.
+        """
         lattice_dimensions = self.get_lattice_dimensions()
         spin_lattice = self.get_spin_lattice()
         sum_over_spins = 0

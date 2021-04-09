@@ -12,7 +12,7 @@ matplotlib.rcParams['text.usetex'] = True
 
 def display_mean_energy_plot_glauber():
     """Plot the average energy against temperature for Glauber Dynamics."""
-    datafile = np.loadtxt("ising_model_glauber_data.txt")
+    datafile = np.loadtxt("../data_files/ising_model_glauber_data.txt")
     temperatures = datafile[0]
     mean_energies = datafile[3]
     plt.title('Mean Energy against Temperature for Glauber Dynamics')
@@ -27,7 +27,7 @@ def display_mean_absolute_magnetism_plot_glauber():
     Plot the mean absolute magnetisation against 
     temperature for Glauber Dynamics.
     """
-    datafile = np.loadtxt("ising_model_glauber_data.txt")
+    datafile = np.loadtxt("../data_files/ising_model_glauber_data.txt")
     temperatures = datafile[0]
     mean_absolute_magnetisms = datafile[1]
     plt.title('Mean Absolute Magnetisation against Temperature for\
@@ -43,7 +43,7 @@ def display_scaled_specific_heat_plot_glauber():
     Plot the scaled specific heat against 
     temperature for Glauber.
     """
-    datafile = np.loadtxt("ising_model_glauber_data.txt")
+    datafile = np.loadtxt("../data_files/ising_model_glauber_data.txt")
     temperatures = datafile[0]
     scaled_specific_heat_capacities = datafile[4]
     bootstrap_errors = datafile[5]
@@ -61,7 +61,7 @@ def display_susceptibility_plot_glauber():
     Plot the susceptibility against temperature 
     for Glauber Dynamics.
     """
-    datafile = np.loadtxt("ising_model_glauber_data.txt")
+    datafile = np.loadtxt("../data_files/ising_model_glauber_data.txt")
     temperatures = datafile[0]
     susceptibilities = datafile[2]
     plt.title('Susceptibility against Temperature using Glauber Dynamics')
@@ -75,7 +75,7 @@ def display_mean_energy_plot_kawasaki():
     """
     Plot the mean energy against temperature for Kawasaki Dynamics.
     """
-    datafile = np.loadtxt("ising_model_kawasaki_data.txt")
+    datafile = np.loadtxt("../data_files/ising_model_kawasaki_data.txt")
     temperatures = datafile[0]
     mean_energies = datafile[1]
     plt.title('Mean Energy against Temperature using Kawasaki Dynamics')
@@ -90,7 +90,7 @@ def display_scaled_specific_heat_plot_kawasaki():
     Plot the scaled specific heat capacity against temperature
     for Kawasaki Dynamics.
     """
-    datafile = np.loadtxt("ising_model_kawasaki_data.txt")
+    datafile = np.loadtxt("../data_files/ising_model_kawasaki_data.txt")
     temperatures = datafile[0]
     scaled_specific_heat_capacities = datafile[2]
     bootstrap_errors = datafile[3]
