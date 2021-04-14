@@ -1,3 +1,6 @@
 __pychache__
 Example_code/
 python_scripts/__pycache__
+ising_glauber.sh
+ising_kawasaki.sh
+python_scripts/spin_lattice.pyc
