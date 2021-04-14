@@ -260,6 +260,28 @@ class SpinLattice():
 
 
     # Kawasaki Methods
+    def initialise_spin_lattice_kawasaki(self):
+        """
+        Initialise the spin lattice for Kawasaki dynamics
+        to allow accurate calculation of observables.
+        Half of the spins are initialised as up and half as down.
+        This is not used for animating the Ising model.
+        """
+        lattice_dimensions = self.get_lattice_dimensions()
+        spin_lattice = self.get_spin_lattice()
+
+        for row in range(lattice_dimensions):
+                for column in range(lattice_dimensions):
+                    # Check if the sum of the current row and column of the
+                    # spin lattice is even.
+                    if(np.mod(row + column, 2) == 0):
+                        # If the sum of the current row and column is even
+                        # the spin is set to up.
+                        spin_lattice[row, column] = 1
+                        # If the sum of the current row and column is not even
+                        # the spin is set to down.
+                    else:
+                        spin_lattice[row, column] = -1
 
     def select_new_state_kawasaki(self):
             """Calculate the new state."""
@@ -336,7 +358,7 @@ class SpinLattice():
         """
         nsteps = self.get_nsteps()
         lattice_dimensions = self.get_lattice_dimensions()
-        self.initialise_spin_lattice()
+        self.initialise_spin_lattice_kawasaki()
 
         total_energy = 0
         total_energy_squared = 0
@@ -349,7 +371,7 @@ class SpinLattice():
                     delta_E = self.calculate_energy_difference_kawasaki()
                     self.metropolis_algorithm_kawasaki(delta_E)
 
-            if (step % 10 == 0) and (step > 400):
+            if (step % 10 == 0) and (step > 100):
                 current_energy = self.calculate_mean_total_energy()
 
                 # Sum over energy values
