@@ -29,6 +29,10 @@ class SpinLattice():
         """Method to return the n x n spin lattice."""
         return self.spin_lattice
 
+    def set_spin_lattice(self, spin_lattice):
+        """Method to update the n x n spin lattice."""
+        self.spin_lattice = spin_lattice
+
     def get_temperature(self):
         """Method to return the temperature of the system."""
         return self.temperature
@@ -189,13 +193,18 @@ class SpinLattice():
         elif random_number <= boltzmann_weight:
             spin_lattice[self.itrial, self.jtrial] *= -1
 
-    def calculate_observables_glauber(self):
+    def calculate_observables_glauber(self, previous_state):
         """
         Calculate the observables using Glauber dynamics.
         """
         nsteps = self.get_nsteps()
         lattice_dimensions = self.get_lattice_dimensions()
-        self.initialise_spin_lattice_glauber()
+        temperature = self.get_temperature()
+        if temperature == 1.0:
+            self.initialise_spin_lattice_glauber()
+        else:
+            self.set_spin_lattice(previous_state)
+
 
         total_magnetisation = 0
         absolute_magnetisation = 0
@@ -352,13 +361,18 @@ class SpinLattice():
             spin_lattice[self.itrial, self.jtrial] *= -1
             spin_lattice[self.itrial_1, self.jtrial_1] *= -1
 
-    def calculate_observables_kawasaki(self):
+    def calculate_observables_kawasaki(self, previous_state):
         """
         Calculate the observables using Kawasaki dynamics.
         """
         nsteps = self.get_nsteps()
         lattice_dimensions = self.get_lattice_dimensions()
-        self.initialise_spin_lattice_kawasaki()
+        temperature = self.get_temperature()
+
+        if temperature == 1.0:
+            self.initialise_spin_lattice_kawasaki()
+        else:
+            self.set_spin_lattice(previous_state)
 
         total_energy = 0
         total_energy_squared = 0

@@ -25,12 +25,14 @@ def main():
         absolute_magnetisms = []
         sum_over_resampled_scaled_heat_capacities = []
 
+        previous_state = np.ones((lattice_dimensions, lattice_dimensions), 
+                                    dtype=float)
         for temperature in temperatures:
             ising_model = SpinLattice(lattice_dimensions, temperature)
             total_magnetisation, total_magnetisation_squared, \
             absolute_magnetisation, total_energy, \
             total_energy_squared, bootstrap_energies = \
-                ising_model.calculate_observables_glauber()
+                ising_model.calculate_observables_glauber(previous_state)
             
             # Calculate the mean values of the observables
             # Mean of magnetisation values
@@ -85,6 +87,8 @@ def main():
             sum_over_resampled_scaled_heat_capacities.append(\
                 sum_over_resampled_scaled_heat_capacity)
 
+            previous_state = ising_model.get_spin_lattice()
+
         # Write observable data to file
         observables_data = np.vstack((temperatures, 
             np.array(absolute_magnetisms), np.array(susceptibilities), 
@@ -99,10 +103,12 @@ def main():
         scaled_heat_capacities = []
         sum_over_resampled_scaled_heat_capacities = []
 
+        previous_state = np.ones((lattice_dimensions, lattice_dimensions), 
+                                    dtype=float)
         for temperature in temperatures:
             ising_model = SpinLattice(lattice_dimensions, temperature)
             total_energy, total_energy_squared, bootstrap_energies = \
-                ising_model.calculate_observables_kawasaki()
+                ising_model.calculate_observables_kawasaki(previous_state)
             
             # Calculate the mean values of the observables
             # Mean of energy values
@@ -144,6 +150,8 @@ def main():
             sum_over_resampled_scaled_heat_capacities.append(\
                 sum_over_resampled_scaled_heat_capacity)
 
+            previous_state = ising_model.get_spin_lattice()
+            
         # Write observable data to file
         observables_data = np.vstack((temperatures, 
             np.array(energies), np.array(scaled_heat_capacities), 
