@@ -91,7 +91,7 @@ def main():
             np.array(energies), np.array(scaled_heat_capacities), 
             np.array(sum_over_resampled_scaled_heat_capacities)))
 
-        np.savetxt("../data_files/ising_model_glauber_data.txt", observables_data)
+        np.savetxt("ising_model_glauber_data.txt", observables_data)
             
     elif dynamics_type == "Kawasaki":
         temperatures = np.arange(1, 3, 0.1)
@@ -149,5 +149,5 @@ def main():
             np.array(energies), np.array(scaled_heat_capacities), 
             np.array(sum_over_resampled_scaled_heat_capacities)))
 
-        np.savetxt("../data_files/ising_model_kawasaki_data.txt", observables_data)
+        np.savetxt("ising_model_kawasaki_data.txt", observables_data)
 main()
