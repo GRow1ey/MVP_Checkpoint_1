@@ -1,4 +1,4 @@
-# MVP_Checkpoint_1
+# MVP_Checkpoint_1 Running Instructions
 
 # ising.animation.py
 python ising.animation.py N T Glauber/Kawasaki
