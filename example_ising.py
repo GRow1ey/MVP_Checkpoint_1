@@ -250,4 +250,4 @@ def metropolis(dE,T,kB = 1.0):
         flag = True
     return flag
 
-run('g')
+run('k')
