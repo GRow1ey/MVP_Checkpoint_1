@@ -20,7 +20,7 @@ def display_mean_energy_plot_glauber():
     plt.ylabel('Mean Energy, $\displaystyle\langle E \\rangle$')
     plt.plot(temperatures, mean_energies)
     plt.show()
-    main()
+    return continue_plotting()
 
 def display_mean_absolute_magnetism_plot_glauber():
     """
@@ -36,7 +36,7 @@ def display_mean_absolute_magnetism_plot_glauber():
     plt.ylabel('Mean Absolute Magnetisation, $\displaystyle\langle |M| \\rangle$')
     plt.plot(temperatures, mean_absolute_magnetisms)
     plt.show()
-    main()
+    return continue_plotting()
 
 def display_scaled_specific_heat_plot_glauber():
     """
@@ -53,8 +53,8 @@ def display_scaled_specific_heat_plot_glauber():
     plt.ylabel('Scaled Specific Heat Capacity, C')
     plt.plot(temperatures, scaled_specific_heat_capacities)
     plt.errorbar(temperatures, scaled_specific_heat_capacities, yerr=bootstrap_errors)
-    plt.show() 
-    main()
+    plt.show()
+    return continue_plotting()
 
 def display_susceptibility_plot_glauber():
     """
@@ -69,7 +69,7 @@ def display_susceptibility_plot_glauber():
     plt.ylabel('Susceptibility, $\displaystyle \chi$')
     plt.plot(temperatures, susceptibilities)
     plt.show()
-    main()
+    return continue_plotting()
 
 def display_mean_energy_plot_kawasaki():
     """
@@ -83,7 +83,7 @@ def display_mean_energy_plot_kawasaki():
     plt.ylabel('Average Energy, $\displaystyle\langle E \\rangle$')
     plt.plot(temperatures, mean_energies)
     plt.show()
-    main()
+    return continue_plotting()
 
 def display_scaled_specific_heat_plot_kawasaki():
     """
@@ -101,47 +101,45 @@ def display_scaled_specific_heat_plot_kawasaki():
     plt.errorbar(temperatures, scaled_specific_heat_capacities, 
         yerr=bootstrap_errors)
     plt.show()
-    main()
+    return continue_plotting()
 
+def continue_plotting():
+    """Checks if a user would like to continue plotting observables."""
+    prompt = "Would you like to continue plotting observables (y/n) "
+    continue_plotting = input(prompt)
+    if continue_plotting == "y":
+        main()
+    else:
+        return False
+        
 def main():
     if len(sys.argv) != 2:
         print("Usage python3 ising.display_plots.py Glauber/Kawasaki")
         sys.exit()
-
-    dynamics_type = sys.argv[1]
-    while True:
+    run_simulation = True
+    while run_simulation:
+        dynamics_type = sys.argv[1]
         if dynamics_type == "Glauber":
             prompt = "Enter the observable plot you wish to display: \n"
             prompt += "E-(Energy)/AM-(Absolute Magnetisation)/" + \
-                "SSH-(Scaled Specific Heat)/S-(Susceptibility)) \n"
-            prompt += "(Enter 'q' to quit) "
+                    "SSH-(Scaled Specific Heat)/S-(Susceptibility)) \n"
             observable = input(prompt)
             if observable == "E":
-                display_mean_energy_plot_glauber()
-                main()
+                run_simulation = display_mean_energy_plot_glauber()
             elif observable == "AM":
-                display_mean_absolute_magnetism_plot_glauber()
-                main()
+                run_simulation = display_mean_absolute_magnetism_plot_glauber()
             elif observable == "SSH":
-                display_scaled_specific_heat_plot_glauber()
-                main()
+                run_simulation = display_scaled_specific_heat_plot_glauber()
             elif observable == "S":
-                display_susceptibility_plot_glauber()
-                main()
-            elif observable == 'q':
-                break
+                run_simulation = display_susceptibility_plot_glauber()
         elif dynamics_type == "Kawasaki":
             prompt = "Enter the observable plot you wish to display: \n"
             prompt += "(E-(Energy)/SSH-(Scaled Specific Heat)) \n"
             prompt += "(Enter 'q' to quit) "
             observable = input(prompt)
             if observable == "E":
-                display_mean_energy_plot_kawasaki()
-                main()
+                run_simulation = display_mean_energy_plot_kawasaki()
             elif observable == "SSH":
-                display_scaled_specific_heat_plot_kawasaki()
-                main()
-            elif observable == 'q':
-                break
+                run_simulation = display_scaled_specific_heat_plot_kawasaki()
 
 main()
